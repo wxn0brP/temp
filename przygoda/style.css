@@ -1,0 +1,28 @@
+body{
+	background-color: #838383;
+	color: #fff;
+	text-align: center;
+}
+
+a{
+	color: #fff;
+}
+
+.con{
+	border: 2px solid #111;
+	width: 1000px;
+	height: 500px;
+	margin: auto;
+	
+	display: block;
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	border: 2px solid #111;
+}
+
+#bgCanvas {
+	z-index: 1;
+}
