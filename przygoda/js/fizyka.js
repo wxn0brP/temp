@@ -43,8 +43,8 @@ var Fizyka = {
 			Fizyka.dane.linia.t.push({
 				x: mx,
 				y: my,
-				gx: dane.gracz.x,
-				gy: dane.gracz.y,
+				gx: dane.gracz.x+dane.gracz.w/2,
+				gy: dane.gracz.y+dane.gracz.h/2,
 			})
 			setTimeout(() => {Fizyka.dane.linia.t.shift();}, 300);
 		});
