@@ -16,12 +16,20 @@ function zegar(){
 zegar();
 
 var dane = [...new URLSearchParams(window.location.href)];
-if(dane[0] && dane[0][1]=="u"){
+if(dane[0] && dane[0][1].indexOf("u") > -1){
 	var script = document.createElement('script');
 	script.src="//cdn.jsdelivr.net/npm/eruda"; 
 	document.body.appendChild(script);
 	script.onload = function(){ 
 		eruda.init();
+	}
+}
+if(dane[0] && dane[0][1].indexOf("wlib") > -1){
+	var script = document.createElement('script');
+	script.src="/lib/wlib.min.js"; 
+	document.body.appendChild(script);
+	script.onload = function(){
+		lo("wlib jest gotowy")
 	}
 }
 
