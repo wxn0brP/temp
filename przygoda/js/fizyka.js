@@ -1,6 +1,6 @@
 var Fizyka = {
 	dane: {
-		myszka: {mx: 0, my: 0},
+		myszka: {mx: 0, my: 0, click: false,},
 	},
 	
 	graczIni: function(dane){
@@ -11,14 +11,12 @@ var Fizyka = {
 			Fizyka.nacisnieto[event.keyCode] = false;
 		}
 		document.addEventListener('mousemove', function(evt){
-			var rect = dane.canvas.Canvas.getBoundingClientRect();
-			var scaleX = dane.canvas.Canvas.width / rect.width;
-			var scaleY = dane.canvas.Canvas.height / rect.height;
-			var mx = Math.round((evt.clientX - rect.left) * scaleX);
-			var my = Math.round((evt.clientY - rect.top) * scaleY);
-			
-			Fizyka.dane.myszka.mx = mx;
-			Fizyka.dane.myszka.my = my;
+			let pos = __.mousePos(dane.canvas.Canvas, evt);
+			Fizyka.dane.myszka.mx = pos.x;
+			Fizyka.dane.myszka.my = pos.y;
+		});
+		document.addEventListener('mouseup', function(evt){
+			Fizyka.dane.myszka.click = true;
 		});
 	},
 	

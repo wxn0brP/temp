@@ -7,9 +7,7 @@ var Akt = {
 		if(Fizyka.nacisnieto[27]){
 			Fizyka.nacisnieto[27] = false;
 			dane.pauza = true;
-			setTimeout(() => {
-				Render.menu(dane);
-			}, 100);
+			Fizyka.dane.myszka.click = false;
 		}
 		if(Fizyka.nacisnieto[37] || Fizyka.nacisnieto[65]){
 			dane.gracz.x -= dane.gracz.speed;
@@ -40,6 +38,24 @@ var Akt = {
 				}
 			});
 		}
+		if(Fizyka.nacisnieto[80]){//p
+			if(dane.gracz.moce.sciana > 0){
+				dane.gracz.moce.sciana--;
+				Fizyka.nacisnieto[80] = false;
+				let x = dane.gracz.x;
+				let y = dane.gracz.y;
+				if(dane.gracz.kierunek == "prawo"){
+					x += 15 + dane.gracz.w;
+				}else if(dane.gracz.kierunek == "lewo"){
+					x -= 35;
+				}else if(dane.gracz.kierunek == "dol"){
+					y += 15 + dane.gracz.h;
+				}else if(dane.gracz.kierunek == "gora"){
+					y -= 15 + dane.gracz.h;
+				}
+				dane.teren.push(Obiekty.Sciana(x, y, 20, 20, "#dddd11"));
+			}
+		}
 		
 		dane.przejscia.forEach(function(p, index, object){
 			if(p.hp <= 0){
@@ -53,20 +69,14 @@ var Akt = {
 		Obiekty.Wrogowie.check(dane);
 		Wrog.akt(dane);
 		
-		if(dane.gracz.hp <= 0 && !dane.dev){
+		if(dane.gracz.hp <= 0 && !dane.config.dev){
 			alert("def");
 			location.href = '';
 			return;
 		}
 		
 		Fizyka.kolizjaTeren(dane, dane.gracz);
-		
-		dane.info.innerHTML =
-			"hp: "+Math.floor(dane.gracz.hp)+
-			(!dane.dev ? "" : 
-				""//"<br/>"+JSON.stringify(Fizyka.dane.myszka)
-			)
-		;
+		Akt.info(dane);
 		His.check(dane);
 		
 		danes = dane;
@@ -74,9 +84,18 @@ var Akt = {
 	
 	pauza: function(dane){
 		if(Fizyka.nacisnieto[27]){
+			Fizyka.dane.myszka.click = false;
 			Fizyka.nacisnieto[27] = false;
 			dane.pauza = false;
 		}
 		
+	},
+
+	info: function(dane){
+		dane.canvas.info.innerHTML =
+			" hp: "+Math.floor(dane.gracz.hp)+
+			" coin: "+Math.floor(dane.gracz.coin)+
+			"<br />moce: sciana:"+Math.floor(dane.gracz.moce.sciana)
+		;
 	}
 };

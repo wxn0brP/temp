@@ -16,7 +16,7 @@ var Render = {
 		});
 		
 		dane.moby.forEach(function(t, index){
-			if(dane.dev){
+			if(dane.config.dev){
 				Render.border(dane, t.x-t.oczy+t.w/2, t.y-t.oczy+t.h/2, t.oczy*2, t.oczy*2);
 				Render.tekst(dane, t.x+t.w/2, t.y+t.h+10, JSON.stringify(t.obsesja)+" id: "+index);
 			}
@@ -25,17 +25,24 @@ var Render = {
 		});
 		
 		Render.kwadrat(dane, dane.gracz.x, dane.gracz.y, dane.gracz.w, dane.gracz.h, "red");
+		let x = dane.gracz.x;
+		let y = dane.gracz.y;
 		if(dane.gracz.kierunek == "prawo"){
-			Render.kwadrat(dane, dane.gracz.x+5+dane.gracz.w/2, dane.gracz.y, dane.gracz.w/2, dane.gracz.h/2, "yellow");
+			x += dane.gracz.w;
+			y += dane.gracz.h/2-2.5;
 		}else if(dane.gracz.kierunek == "lewo"){
-			Render.kwadrat(dane, dane.gracz.x-5, dane.gracz.y, dane.gracz.w/2, dane.gracz.h/2, "yellow");
+			x -= 5;
+			y += dane.gracz.h/2-2.5;
 		}else if(dane.gracz.kierunek == "gora"){
-			Render.kwadrat(dane, dane.gracz.x, dane.gracz.y-5, dane.gracz.w/2, dane.gracz.h/2, "yellow");
+			y -= 5;
+			x += dane.gracz.w/2-2.5;
 		}else if(dane.gracz.kierunek == "dol"){
-			Render.kwadrat(dane, dane.gracz.x, dane.gracz.y+5+dane.gracz.h/2, dane.gracz.w/2, dane.gracz.h/2, "yellow");
+			y += dane.gracz.h;
+			x += dane.gracz.w/2-2.5;
 		}
+		Render.kwadrat(dane, x, y, 5, 5, "yellow");
 		
-		if(dane.dev){
+		if(dane.config.dev){
 			Render.border(
 				dane,
 				dane.gracz.x-dane.gracz.oczy+dane.gracz.w/2,
@@ -94,7 +101,87 @@ var Render = {
 	},
 	
 	menu: function(dane){
+		Render.render(dane);
+		Akt.info(dane);
+		let mysz = Fizyka.dane.myszka;
+		let myszObj = {x: mysz.mx, y: mysz.my, w: 20, h: 20};
 		Render.kwadrat(dane, 400, 100, 200, 300, "#aaaaaa");
-		Render.dymek(dane, 500, 120, "ABY KONTYNÓWAĆ KLIKNIJ \"ESC\"\nNA KLAWIATÓRZE", "black", 12, 20);
+
+		let play = {
+			x: 500, y: 130, w: 100, h: 50,
+		}
+		let hp = {
+			x: 445, y: 185, w: 85, h: 50,
+		}
+		let scianaM = {
+			x: 555, y: 185, w: 85, h: 50,
+		}
+
+		let resetPos = {
+			x: 445, y: 330, w: 85, h: 30,
+		}
+		let randPos = {
+			x: 555, y: 330, w: 85, h: 30,
+		}
+		let muzyka = {
+			x: 445, y: 370, w: 85, h: 30,
+		}
+		let instrokcja = {
+			x: 555, y: 370, w: 85, h: 30,
+		}
+
+		let rend = function(dan, napis){
+			Render.dymek(dane, dan.x, dan.y, napis, "black", 12, 20);
+			Render.border(dane, dan.x-dan.w/2, dan.y-dan.h/2, dan.w, dan.h);
+		}
+		rend(play, "kontunuj");
+		rend(hp, "kup hp -> 10");
+		rend(scianaM, "kup moc:\n\"ŚCIANA\" -> 10");
+		rend(resetPos, "reset pozycji");
+		rend(randPos, "losuj pozycje");
+		rend(muzyka, "muzyka");
+		rend(instrokcja, "instrokcja");
+
+
+		if(mysz.click){
+			mysz.click = false;
+			if(Fizyka.kolizjaD(hp, myszObj)){
+				if(dane.gracz.coin >= 10){
+					dane.gracz.coin -= 10;
+					dane.gracz.hp++;
+				}
+			}
+			if(Fizyka.kolizjaD(scianaM, myszObj)){
+				if(dane.gracz.coin >= 10){
+					dane.gracz.coin -= 10;
+					dane.gracz.moce.sciana += 5;
+				}
+			}
+			if(Fizyka.kolizjaD(play, myszObj)){
+				dane.pauza = false;
+			}
+			if(Fizyka.kolizjaD(muzyka, myszObj)){
+				Silnik.muzyka(dane);
+			}
+			if(Fizyka.kolizjaD(resetPos, myszObj)){
+				dane.gracz.x = 495;
+				dane.gracz.y = 245;
+			}
+			if(Fizyka.kolizjaD(randPos, myszObj)){
+				dane.gracz.x = __.rand(-1000, 1200);
+				dane.gracz.y = __.rand(-1000, 1200);
+			}
+			if(Fizyka.kolizjaD(instrokcja, myszObj)){
+				alert(
+					"--STEROWANIE--\n"+
+					"chodzenie: WSAD lub strzałki\n"+
+					"atak: spacja\n"+
+					"moc \"Sciana\": P\n"+
+					"pauza: ESC\n"+
+					"--CEL--\n"+
+					"aktualnie gra nie ma celu :)"
+				);
+			}
+		}
 	}
 };

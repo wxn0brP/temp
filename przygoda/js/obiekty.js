@@ -5,8 +5,8 @@ var Obiekty = {
 		return {
 			x: 495,
 			y: 245,
-			w: 10,
-			h: 10,
+			w: 20,
+			h: 20,
 			speed: 2,
 			typ: "gracz",
 			hp: 50,
@@ -14,6 +14,10 @@ var Obiekty = {
 			oczy: 70,
 			kolizja: true,
 			kierunek: "prawo",
+			coin: 0,
+			moce: {
+				sciana: 2,
+			},
 		}
 	},
 	
@@ -30,7 +34,7 @@ var Obiekty = {
 			Obiekty.Sciana(400, 290, 200, 20, "yellow"),
 			
 		];
-		arr = arr.concat(Obiekty.Bariera(-2000, -2000, 5000, 5000));
+		arr = arr.concat(Obiekty.Bariera(-2000, -2000, 4300, 4300));
 		return arr;
 	},
 	
@@ -69,8 +73,8 @@ var Obiekty = {
 	Wrogowie: {
 		check: function(dane){
 			//Obiekty.Wrogowie.checkP(dane, "wrog2", 2, 200);
-			Obiekty.Wrogowie.checkP(dane, "wrog1", 20, 1000);
-			Obiekty.Wrogowie.checkP(dane, "wrog2", 5, 1000);
+			Obiekty.Wrogowie.checkP(dane, "wrog1", 37, 2000);
+			Obiekty.Wrogowie.checkP(dane, "wrog2", 9, 2000);
 		},
 		
 		checkP: function(dane, typ, ile, odl){
