@@ -3,8 +3,8 @@ var Obiekty = {
 	
 	Gracz: function(){
 		return {
-			x: 200,
-			y: 100,
+			x: 495,
+			y: 245,
 			w: 10,
 			h: 10,
 			speed: 2,
@@ -13,6 +13,7 @@ var Obiekty = {
 			atak: 1,
 			oczy: 70,
 			kolizja: true,
+			kierunek: "prawo",
 		}
 	},
 	
@@ -23,15 +24,28 @@ var Obiekty = {
 	},
 	
 	Teren: function(){
-		return [
-			Obiekty.Sciana(300, 100, 200, 50, "yellow"),
-			Obiekty.Sciana(550, 100, 150, 50, "yellow"),
+		let arr = [
+			Obiekty.Sciana(400, 190, 200, 20, "yellow"),
+			Obiekty.Sciana(400, 190, 20, 100, "yellow"),
+			Obiekty.Sciana(400, 290, 200, 20, "yellow"),
+			
 		];
+		arr = arr.concat(Obiekty.Bariera(-2000, -2000, 5000, 5000));
+		return arr;
 	},
 	
 	Przejscia: function(){
 		return [
-			Obiekty.Przejscie(500, 100, 50, 50, "#F4C370"),
+			Obiekty.Przejscie(580, 200, 20, 100, "#F4C370"),
+		];
+	},
+	
+	Bariera: function(x, y, w, h){
+		return [
+			Obiekty.Sciana(x, y, w+50, 50, "yellow"),
+			Obiekty.Sciana(x, y, 50, w, "yellow"),
+			Obiekty.Sciana(x, y+h, w+50, 50, "yellow"),
+			Obiekty.Sciana(x+w, y, 50, w, "yellow"),
 		];
 	},
 	

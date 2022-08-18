@@ -1,10 +1,6 @@
-function lar(x){
-	console.log(x);
-	return x;
-}
-
 var Silnik = {
 	dane: {},
+	err: false,
 	
 	ini: function(){
 		var Canvas = __("#Canvas").res;
@@ -31,7 +27,12 @@ var Silnik = {
 			info: __("#info").res,
 			dev: (param[0] && param[0][1].indexOf("dev") > -1 ? true : false),
 			config: config,
+			pauza: false,
 		};
+		
+		if(param[0] && param[0][1].indexOf("sp") > -1){
+			dane.gracz.speed = 14;
+		}
 		
 		Fizyka.graczIni(dane);
 		setTimeout(() => {
@@ -42,14 +43,18 @@ var Silnik = {
 	start: function(dane){
 		var petla = function(){
 			setTimeout(() => {
-				if(!Silnik.stop){
+				if(!Silnik.err){
 					try{
 						requestAnimationFrame(petla);
-						Akt.akt(dane);
-						Render.render(dane);
+						if(!dane.pauza){
+							Akt.akt(dane);
+							Render.render(dane);
+						}else{
+							Akt.pauza(dane);
+						}
 					}catch(e){
 						lo(e);
-						Silnik.stop = true;
+						Silnik.err = true;
 					}
 				}
 			}, 1000 / 60);

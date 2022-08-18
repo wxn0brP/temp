@@ -1,7 +1,6 @@
 var Fizyka = {
 	dane: {
 		myszka: {mx: 0, my: 0},
-		linia: {t: [], x: 0, y: 0},
 	},
 	
 	graczIni: function(dane){
@@ -20,33 +19,6 @@ var Fizyka = {
 			
 			Fizyka.dane.myszka.mx = mx;
 			Fizyka.dane.myszka.my = my;
-		});
-		
-		document.addEventListener('mouseup', function(evt){
-			var rect = dane.canvas.Canvas.getBoundingClientRect();
-			var scaleX = dane.canvas.Canvas.width / rect.width;
-			var scaleY = dane.canvas.Canvas.height / rect.height;
-			var mx = Math.round((evt.clientX - rect.left) * scaleX);
-			var my = Math.round((evt.clientY - rect.top) * scaleY);
-			
-			var traf = Fizyka.strzal(dane, {
-				x: mx,
-				y: my,
-				w: 5,
-				h: 5
-			})
-			if(traf){
-				if(traf.odl < dane.gracz.oczy){
-					traf.hp -= dane.gracz.atak;
-				}
-			}
-			Fizyka.dane.linia.t.push({
-				x: mx,
-				y: my,
-				gx: dane.gracz.x+dane.gracz.w/2,
-				gy: dane.gracz.y+dane.gracz.h/2,
-			})
-			setTimeout(() => {Fizyka.dane.linia.t.shift();}, 300);
 		});
 	},
 	
@@ -86,11 +58,6 @@ var Fizyka = {
 		return false;
 	},
 	
-	kolizjaD: function(obj, t){
-		if(obj.x < t.x + t.w && obj.x + obj.w > t.x && obj.y < t.y + t.h && obj.h + obj.y > t.y) return true;
-		return false;
-	},
-	
 	strzal: function(dane, obj){
 		var zwr = false;
 		dane.moby.forEach(function(t){
@@ -105,62 +72,31 @@ var Fizyka = {
 		});
 		return zwr;
 	},
+	checkStrzal: function(dane, o){
+		let x = dane.gracz.x;
+		let y = dane.gracz.y;
+		if(dane.gracz.kierunek == "prawo"){
+			x += o;
+		}else if(dane.gracz.kierunek == "lewo"){
+			x -= o;
+		}else if(dane.gracz.kierunek == "gora"){
+			y -= o;
+		}else if(dane.gracz.kierunek == "dol"){
+			y += o;
+		}
+		return Fizyka.strzal(dane, {
+			x: x, y: y,
+			w: 5, h: 5
+		})
+	},
 	
-	kamera: function(dane){
-		let szyb = dane.gracz.speed;
-		if(dane.gracz.x > dane.canvas.Canvas.width - 100){
-			dane.gracz.x -= szyb;
-			dane.teren.forEach(function(t){
-				t.x -= szyb;
-			});
-			dane.moby.forEach(function(t){
-				t.x -= szyb;
-				t.obsesja.x -= szyb;
-			});
-			dane.przejscia.forEach(function(t){
-				t.x -= szyb;
-			});
-		}
-		if(dane.gracz.x < 100){
-			dane.gracz.x += szyb;
-			dane.teren.forEach(function(t){
-				t.x += szyb;
-			});
-			dane.moby.forEach(function(t){
-				t.x += szyb;
-				t.obsesja.x += szyb;
-			});
-			dane.przejscia.forEach(function(t){
-				t.x += szyb;
-			});
-		}
-		
-		if(dane.gracz.y > dane.canvas.Canvas.height - 50){
-			dane.gracz.y -= szyb;
-			dane.teren.forEach(function(t){
-				t.y -= szyb;
-			});
-			dane.moby.forEach(function(t){
-				t.y -= szyb;
-				t.obsesja.y -= szyb;
-			});
-			dane.przejscia.forEach(function(t){
-				t.y -= szyb;
-			});
-		}
-		if(dane.gracz.y < 50){
-			dane.gracz.y += szyb;
-			dane.teren.forEach(function(t){
-				t.y += szyb;
-			});
-			dane.moby.forEach(function(t){
-				t.y += szyb;
-				t.obsesja.y += szyb;
-			});
-			dane.przejscia.forEach(function(t){
-				t.y += szyb;
-			});
-		}
+	kolizjaD: function(t1, t2){
+		return !(
+			t1.x > t2.x + t2.w ||
+			t1.x + t1.w < t2.x ||
+			t1.y > t2.y + t2.h ||
+			t1.y + t1.h < t2.y
+		)
 	},
 	
 };
