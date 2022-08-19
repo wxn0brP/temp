@@ -15,7 +15,7 @@ function pktRe(a){
 
 function pktUnd(){
 	if(getCookie("sc") == undefined){
-		document.cookie = "sc=0; path=/";
+		setCookie("sc", 0, 500);
 	}
 }
 
@@ -29,6 +29,6 @@ function setCookie(cName, cValue, expDays){
 	let date = new Date();
 	date.setTime(date.getTime() + (expDays * 24 * 60 * 60 * 1000));//dni
 	const expires = "expires=" + date.toUTCString();
-	document.cookie = cName + "=" + cValue + "; " + expires + "; path=/";
+	document.cookie = cName + "=" + cValue + "; " + expires + "; path=/;" + "SameSite=Strict";
 }
 
