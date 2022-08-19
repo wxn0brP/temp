@@ -1,8 +1,10 @@
 var danes = {};
 
 var Akt = {
-	dane: {},
-	
+	dane: {
+		zapisano: false,
+	},
+
 	akt: function(dane){
 		if(Fizyka.nacisnieto[27]){
 			Fizyka.nacisnieto[27] = false;
@@ -56,7 +58,7 @@ var Akt = {
 				dane.teren.push(Obiekty.Sciana(x, y, 20, 20, "#dddd11"));
 			}
 		}
-		
+
 		dane.przejscia.forEach(function(p, index, object){
 			if(p.hp <= 0){
 				object.splice(index, 1);
@@ -65,30 +67,41 @@ var Akt = {
 			let odl = __.odl(dane.gracz.x, dane.gracz.y, p.x+p.w/2, p.y+p.h/2);
 			p.odl = odl;
 		});
-		
+
 		Obiekty.Wrogowie.check(dane);
 		Wrog.akt(dane);
-		
+
 		if(dane.gracz.hp <= 0 && !dane.config.dev){
 			alert("def");
 			location.href = '';
 			return;
 		}
-		
+
 		Fizyka.kolizjaTeren(dane, dane.gracz);
 		Akt.info(dane);
 		His.check(dane);
-		
+		dane.config.autoZapisL++;
+		if(dane.config.autoZapisL > dane.config.autoZapisT){
+			dane.config.autoZapisL = 0;
+			if(dane.config.autoZapis){//auto zapis
+				Silnik.zapis(dane);
+				Akt.dane.zapisano = true;
+				setTimeout(() => {
+					Akt.dane.zapisano = false;
+				}, 3000);
+			}
+		}
+
 		danes = dane;
 	},
-	
+
 	pauza: function(dane){
 		if(Fizyka.nacisnieto[27]){
 			Fizyka.dane.myszka.click = false;
 			Fizyka.nacisnieto[27] = false;
 			dane.pauza = false;
 		}
-		
+
 	},
 
 	info: function(dane){

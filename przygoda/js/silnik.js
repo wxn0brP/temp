@@ -1,23 +1,26 @@
 var Silnik = {
 	dane: {},
 	err: false,
-	
+
 	ini: function(){
 		var Canvas = __("#Canvas").res;
 		Canvas.width = 1000;
 		Canvas.height = 500;
-		
+
 		var param = [...new URLSearchParams(window.location.href)];
-		
+
 		var canvas = {
 			Canvas: Canvas,
 			Ctx: Canvas.getContext("2d"),
 			info: __("#info").res,
 		};
-		
+
 		var config = {
 			wrog: (param[0] && param[0][1].indexOf("wrog") > -1 ? false : true),
 			dev: (param[0] && param[0][1].indexOf("dev") > -1 ? true : false),
+			autoZapis: true,
+			autoZapisT: 5*60*60,//60 = 1s, 60 * 60 = 1min
+			autoZapisL: 0,
 		};
 
 		var audio = {
@@ -25,7 +28,7 @@ var Silnik = {
 			tyl: new Audio("./audio/tyl.mp3"),
 			tylA: false,
 		};
-		
+
 		var dane = {
 			canvas: canvas,
 			gracz: Obiekty.Gracz(),
@@ -36,20 +39,21 @@ var Silnik = {
 			config: config,
 			pauza: true,
 		};
-		
+
 		if(param[0] && param[0][1].indexOf("sp") > -1){
 			dane.gracz.speed = 14;
 		}
 
 		dane.audio.tyl.loop = true;
-		
+
 		danes = dane;
+		Silnik.odczyt(dane);
 		Fizyka.graczIni(dane);
 		setTimeout(() => {
 			Silnik.start(dane);
-		},10);
+		}, 10);
 	},
-	
+
 	start: function(dane){
 		var petla = function(){
 			setTimeout(() => {
@@ -82,7 +86,36 @@ var Silnik = {
 			dane.audio.tylA = true;
 			dane.audio.tyl.play();
 		}
-	}
+	},
+
+	zapis: function(dane){
+		setCookie("przygodaGracz", JSON.stringify(dane.gracz), 500);
+		setCookie("przygodaTeren", JSON.stringify(dane.teren), 500);
+		setCookie("przygodaPrzejscia", JSON.stringify(dane.przejscia), 500);
+	},
+
+	odczyt: function(dane){
+		if(getCookie("przygodaGracz") == undefined){
+			setCookie("przygodaGracz", JSON.stringify(dane.gracz), 500);
+		}
+		if(getCookie("przygodaTeren") == undefined){
+			setCookie("przygodaTeren", JSON.stringify(dane.teren), 500);
+		}
+		if(getCookie("przygodaPrzejscia") == undefined){
+			setCookie("przygodaPrzejscia", JSON.stringify(dane.przejscia), 500);
+		}
+
+		dane.gracz = JSON.parse(getCookie("przygodaGracz"));
+		dane.teren = JSON.parse(getCookie("przygodaTeren"));
+		dane.przejscia = JSON.parse(getCookie("przygodaPrzejscia"));
+	},
+
+	nowaGra: function(dane){
+		dane.gracz = Obiekty.Gracz();
+		dane.teren = Obiekty.Teren();
+		dane.przejscia = Obiekty.Przejscia();
+		Silnik.zapis(dane);
+	},
 };
 
 window.onload = function(){
