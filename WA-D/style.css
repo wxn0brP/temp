@@ -57,3 +57,21 @@ body{
 	text-align: center;
     margin-top: 20px;
 }
+
+#footer a{
+    color: white;
+}
+
+#dane{
+    color: #737373;
+    font-size: 20px;
+    float: left;
+    margin-left: 20%;
+}
+
+#kontakt{
+    color: #737373;
+    font-size: 20px;
+    float: left;
+    margin-left: 50%;
+}
