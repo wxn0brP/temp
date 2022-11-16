@@ -1,0 +1,26 @@
+*{
+	padding: 0;
+    margin: 0;
+}
+
+:root {
+	--bg: #282829;
+	--txt: #fff;
+}
+
+/* GENERAL */
+body{
+	background-color: var(--bg);
+	color: var(--txt);
+}
+
+a{
+	color: var(--txt);
+}
+
+#contener{
+	text-align: center;
+	width: 90%;
+	margin-left: auto;
+	margin-right: auto;
+}
